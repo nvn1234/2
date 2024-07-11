@@ -83,7 +83,7 @@
             <option value="300">5 Minutes</option>
             <option value="600">10 Minutes</option>
             <option value="3600">1 Hour</option>
-          <option value="5400">1.5 Hours</option>
+            <option value="5400">1.5 Hours</option>
             <option value="7200">2 Hours</option>
             <option value="10800">3 Hours</option>
             <option value="14400">4 Hours</option>
@@ -104,17 +104,18 @@
         <div class="timer">00:00:00</div>
     </div>
 
+    <audio id="alarmAudio" src="chime.mp3" preload="auto"></audio> <!-- Add your audio file here -->
+
     <script>
         let timerInterval;
         let totalSeconds = 0;
         let remainingSeconds = 0;
         let screenLock;
-        let audioContext;
-        let oscillator;
         const buttonsContainer = document.querySelector('.buttons');
         const timeSettingsContainer = document.querySelector('.time-settings');
         const timerElement = document.getElementById('timer');
         const fullscreenTimerElement = document.getElementById('fullscreenTimer');
+        const alarmAudio = document.getElementById('alarmAudio'); // Reference to the audio element
 
         document.getElementById('timeSelect').addEventListener('change', function() {
             setTimer(parseInt(this.value));
@@ -131,7 +132,7 @@
             timerInterval = setInterval(() => {
                 if (remainingSeconds <= 0) {
                     clearInterval(timerInterval);
-                     playSound();
+                    playSound();
                     vibrateDevice();
                     return;
                 }
@@ -251,18 +252,7 @@
 
         // Play sound on timer completion
         function playSound() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            oscillator = audioContext.createOscillator();
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4 note
-            oscillator.connect(audioContext.destination);
-            oscillator.start();
-            setTimeout(() => {
-                oscillator.stop();
-                oscillator.disconnect();
-            }, 1000); // Play for 1 second
+            alarmAudio.play(); // Play the custom audio file
         }
 
         // Vibrate on timer completion
